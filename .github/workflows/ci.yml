@@ -3,8 +3,6 @@ name: CI
 on:
   pull_request:
   push:
-    branches:
-      - master
 
 jobs:
   build-test:
@@ -20,10 +18,16 @@ jobs:
       - name: Setup Java ${{ matrix.java-version }}
         uses: actions/setup-java@v2
         with:
+          distribution: 'adopt'
           java-version: ${{ matrix.java-version }}
 
       - name: Setup coursier cache
         uses: coursier/cache-action@v6
+
+      - name: Install sbt
+        run: |
+          curl -Ls https://git.io/sbt > ./sbt
+          chmod 0755 ./sbt
 
       - name: Test
         run: ./sbt test
