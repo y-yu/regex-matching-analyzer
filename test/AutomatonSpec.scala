@@ -1,8 +1,9 @@
 package matching.transition
 
-import org.scalatest._
+import org.scalatest.flatspec.AnyFlatSpec
+import org.scalatest.matchers.should.Matchers
 
-class AutomatonSpec extends FlatSpec with Matchers {
+class AutomatonSpec extends AnyFlatSpec with Matchers {
   "reverse" should "construct reverse NFA" in {
       val nfa = new NFA[Int,Char](
         Set(1,2,3,4),

@@ -20,7 +20,7 @@ object Analysis {
     var result: (AnalysisResult[A], Long) = (Failure(""), 0)
 
     val thread = new Thread {
-      override def run() {
+      override def run(): Unit = {
         val start = System.currentTimeMillis()
         val a = try {
           Success(proc)

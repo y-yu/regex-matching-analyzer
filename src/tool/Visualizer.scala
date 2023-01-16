@@ -12,20 +12,20 @@ object Visualizer {
   }
 
   implicit class GraphVisualizer[V](g: Graph[V]) {
-    protected def visualizeNodes(file: File, renameMap: Map[V,Int]) {
+    protected def visualizeNodes(file: File, renameMap: Map[V,Int]): Unit = {
       g.nodes.foreach(v =>
         file.writeln(s""""${renameMap(v)}" [label = "${esc(v)}"];""", 1)
       )
       file.writeln()
     }
 
-    protected def visualizeEdges(file: File, renameMap: Map[V,Int]) {
+    protected def visualizeEdges(file: File, renameMap: Map[V,Int]): Unit = {
       g.edges.foreach{ case (v1,v2) =>
         file.writeln(s""""${renameMap(v1)}" -> "${renameMap(v2)}";""", 1)
       }
     }
 
-    def visualize(name: String) {
+    def visualize(name: String): Unit = {
       val file = IO.createFile(s"${name}.dot", true)
       val renameMap = g.nodes.zipWithIndex.toMap
 
@@ -56,7 +56,7 @@ object Visualizer {
   }
 
   implicit class NFAVisualizer[Q,A](nfa: NFA[Q,A]) extends GraphVisualizer[Q](nfa) {
-    override protected def visualizeNodes(file: File, renameMap: Map[Q,Int]) {
+    override protected def visualizeNodes(file: File, renameMap: Map[Q,Int]): Unit = {
       file.writeln("\"initial\" [", 1)
       file.writeln("label = \"\",", 2)
       file.writeln("shape = none,", 2)
@@ -74,7 +74,7 @@ object Visualizer {
       }
     }
 
-    override protected def visualizeEdges(file: File, renameMap: Map[Q,Int]) {
+    override protected def visualizeEdges(file: File, renameMap: Map[Q,Int]): Unit = {
       nfa.initialStates.foreach{ initialState =>
         file.writeln(s""""initial" -> "${renameMap(initialState)}";""", 1)
       }

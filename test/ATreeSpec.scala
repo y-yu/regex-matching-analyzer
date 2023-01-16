@@ -1,12 +1,12 @@
 package matching.monad
 
-import org.scalatest._
-
 import AMonad._
 import ATree._
 import ATree.ATreeMonad._
+import org.scalatest.flatspec.AnyFlatSpec
+import org.scalatest.matchers.should.Matchers
 
-class ATreeSpec extends FlatSpec with Matchers {
+class ATreeSpec extends AnyFlatSpec with Matchers {
   ">>=l" should "calculate left bind" in {
     val t: ATree[Char,Int] = AOr(ALeaf(1), AAssert(AOr(AFail(), ALeaf('a')), ALeaf(2)))
     (t `>>=l` (c => AOr(ALeaf(c.toString), ALeaf(c.toUpper.toString)): ATree[String, String])) should be (

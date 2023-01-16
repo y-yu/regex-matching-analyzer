@@ -1,11 +1,11 @@
 package matching.monad
 
-import org.scalatest._
-
+import org.scalatest.flatspec.AnyFlatSpec
+import org.scalatest.matchers.should.Matchers
 import Monad._
 import Tree._
 
-class TreeSpec extends FlatSpec with Matchers {
+class TreeSpec extends AnyFlatSpec with Matchers {
   "bind" should "calculate bind" in {
     val t: Tree[Int] = Or(Leaf(1), Or(Fail, Leaf(2)))
     (t >>= (i => Or(Leaf(i), Leaf(i*2)))) should be (

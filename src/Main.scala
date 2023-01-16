@@ -27,7 +27,7 @@ object Main {
     }
   }
 
-  def main(args: Array[String]) {
+  def main(args: Array[String]): Unit = {
     def parseArgs(rawArgs: Array[String]): (Option[String], Settings) = {
       def parseOptions(options: List[String], setting: Settings = new Settings()): Settings = {
         options match {
@@ -75,7 +75,7 @@ object Main {
     }
   }
 
-  def test(regExpStr: String, settings: Settings): TestResult = {
+  def test(regExpStr: String, settings: Settings): matching.TestResult = {
     try {
       val (r,options) = settings.style match {
         case Raw => (RegExpParser(regExpStr), new PCREOptions())
@@ -85,16 +85,16 @@ object Main {
         calcTimeComplexity(r,options,settings.method)
       } match {
         case (Analysis.Success((growthRate, witness, approximated, ruleSize)),time) =>
-          Success(growthRate, witness, approximated, ruleSize, time)
-        case (Analysis.Failure(message),_) => Skipped(message)
-        case (Analysis.Timeout(_),_) => Timeout
+          matching.Success(growthRate, witness, approximated, ruleSize, time)
+        case (Analysis.Failure(message),_) => matching.Skipped(message)
+        case (Analysis.Timeout(_),_) => matching.Timeout
       }
     } catch {
       case e: RegExpParser.ParseException => Error(e.message)
     }
   }
 
-  def interactiveTest(settings: Settings) {
+  def interactiveTest(settings: Settings): Unit = {
     var continue = true
     while (continue) {
       println("please input expression. (input blank line to quit)")
@@ -110,7 +110,7 @@ object Main {
     }
   }
 
-  def fileInputTest(inputFile: String, settings: Settings) {
+  def fileInputTest(inputFile: String, settings: Settings): Unit = {
     val regExpStrs = IO.loadFile(inputFile).getLines.toSeq
     val total = regExpStrs.length
 
@@ -125,7 +125,7 @@ object Main {
     val summaryFile = IO.createFile(s"${dirName}/summary.txt")
     val timeFile = IO.createFile(s"${dirName}/time.txt")
 
-    val detailDirNames = List(
+    val detailDirNames: Map[(String, Option[Boolean]), String] = (List(
       "constant",
       "linear",
       "polynomial",
@@ -133,14 +133,14 @@ object Main {
     ).flatMap(resultStr => List(
       (resultStr, Some(false)) -> s"${dirName}/${resultStr}",
       (resultStr, Some(true)) -> s"${dirName}/approximated/${resultStr}"
-    )).toMap ++ List(
+    )) ++ List(
       "timeout",
       "skipped",
       "error"
     ).flatMap(resultStr =>
       List(
       (resultStr, None) -> s"${dirName}/${resultStr}",
-    )).toMap
+    ))).toMap
     IO.createDirectory(s"${dirName}/approximated")
     detailDirNames.values.foreach(IO.createDirectory)
     val detailFiles = detailDirNames.map{ case (key, name) =>
@@ -155,21 +155,21 @@ object Main {
     val summaryCount = MTMap[(String, Option[Boolean]), Int]().withDefaultValue(0)
     val degreeCount = MTMap[(Int, Boolean), Int]().withDefaultValue(0)
 
-    def writeResult(regExpStr: String, result: TestResult) {
+    def writeResult(regExpStr: String, result: TestResult): Unit = {
       val resultStr = result match {
-        case Success(d,_,_,_,_) => d match {
+        case matching.Success(d,_,_,_,_) => d match {
           case Some(0) => "constant"
           case Some(1) => "linear"
           case Some(d) => "polynomial"
           case None => "exponential"
         }
-        case Skipped(_) => "skipped"
-        case Error(_) => "error"
-        case Timeout => "timeout"
+        case matching.Skipped(_) => "skipped"
+        case matching.Error(_) => "error"
+        case matching.Timeout => "timeout"
       }
 
       val approximated = result match {
-        case Success(_,_,b,_,_) => Some(b)
+        case matching.Success(_,_,b,_,_) => Some(b)
         case _ => None
       }
 
@@ -187,7 +187,7 @@ object Main {
       detailListFiles((resultStr,approximated)).writeln(regExpStr)
 
       result match {
-        case s: Success =>
+        case s: matching.Success =>
           timeFile.writeln(s.getTime())
         case _ => // NOP
       }
@@ -195,7 +195,7 @@ object Main {
       summaryCount((resultStr,approximated)) += 1
 
       result match {
-        case Success(Some(d),_,b,_,_) if d >= 2 =>
+        case matching.Success(Some(d),_,b,_,_) if d >= 2 =>
           if (!degreeFiles.contains((d,b))) {
             IO.createDirectory(s"${detailDirNames(("polynomial",Some(b)))}/degree_${d}")
             degreeFiles += (d,b) -> IO.createFile(
@@ -216,7 +216,7 @@ object Main {
 
     val started = new Date().getTime()
 
-    def printProgress(idx: Int) {
+    def printProgress(idx: Int): Unit = {
       var expected: Date = null
       if (idx > 0) {
         val now = new Date().getTime()

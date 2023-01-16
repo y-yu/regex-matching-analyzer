@@ -1,9 +1,10 @@
 package matching.regexp
 
 import RegExpParser._
-import org.scalatest._
+import org.scalatest.flatspec.AnyFlatSpec
+import org.scalatest.matchers.should.Matchers
 
-class RegExpParserSpec extends FlatSpec with Matchers {
+class RegExpParserSpec extends AnyFlatSpec with Matchers {
   "RegExpParser" should "parse a" in {
     RegExpParser("a") should be (ElemExp('a'))
   }

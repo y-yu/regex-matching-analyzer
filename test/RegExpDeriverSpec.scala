@@ -1,12 +1,13 @@
 package matching.regexp
 
-import org.scalatest._
+import org.scalatest.flatspec.AnyFlatSpec
+import org.scalatest.matchers.should.Matchers
 import RegExp._
 import matching.monad._
 import ATree._
 import StateT._
 
-class RegExpDeriverSpec extends FlatSpec with Matchers {
+class RegExpDeriverSpec extends AnyFlatSpec with Matchers {
   implicit var deriver = new RegExpDeriver[StateTBooleanATree]()
 
   def applyLeaves[A](m: StateTBooleanATree[A,A])

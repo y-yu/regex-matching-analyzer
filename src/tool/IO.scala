@@ -18,7 +18,7 @@ object IO {
     new File(fileName)
   }
 
-  def createDirectory(dirName: String) {
+  def createDirectory(dirName: String): Unit = {
     val dir = Paths.get(dirName)
     if (Files.notExists(dir)) {
       Files.createDirectory(dir)
@@ -43,7 +43,7 @@ object IO {
 class File(fileName: String) extends PrintWriter(fileName) {
   var tab = " "*2
 
-  def tabSize_=(size: Int) {
+  def tabSize_=(size: Int): Unit = {
     tab = " "*size
   }
   def tabSize: Int = tab.length
@@ -52,7 +52,7 @@ class File(fileName: String) extends PrintWriter(fileName) {
     write(s"${tab*depth}${s}")
   }
 
-  def writeln(s: String = "", depth: Int = 0) {
+  def writeln(s: String = "", depth: Int = 0): Unit = {
     write(s"${tab*depth}${s}\n")
   }
 }

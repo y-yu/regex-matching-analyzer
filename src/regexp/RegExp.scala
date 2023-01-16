@@ -30,7 +30,7 @@ case class OptionExp[A](r: RegExp[A], greedy: Boolean) extends RegExp[A]
 case class RepeatExp[A](r: RegExp[A], var min: Option[Int], var max: Option[Int], greedy: Boolean) extends RegExp[A]
 object RepeatExp {
   def apply[A](r: RegExp[A], min: Option[Int], max: Option[Int], greedy: Boolean): RegExp[A] = {
-    def validate() {
+    def validate(): Unit = {
       (min, max) match {
         case (Some(min),Some(max)) =>
           if (min < 0 || max < 0) {

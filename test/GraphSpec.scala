@@ -1,8 +1,9 @@
 package matching.transition
 
-import org.scalatest._
+import org.scalatest.flatspec.AnyFlatSpec
+import org.scalatest.matchers.should.Matchers
 
-class GraphSpec extends FlatSpec with Matchers {
+class GraphSpec extends AnyFlatSpec with Matchers {
   "adj" should "be adjacency list" in {
     val g = new Graph(
       Set(1,2,3,4),

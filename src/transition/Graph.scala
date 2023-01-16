@@ -7,7 +7,7 @@ class Graph[V](
   val nodes: Set[V],
   val edges: Seq[(V,V)]
 ) {
-  def this(edges: Seq[(V,V)]) {
+  def this(edges: Seq[(V,V)]) = {
     this(
       edges.flatMap{ case (v1,v2) =>
         Analysis.checkInterrupted("calculate graph")
@@ -119,7 +119,7 @@ class LabeledGraph[V,A](
     (v1,v2)
   }
 ) {
-  def this(labeledEdges: Seq[(V,A,V)]) {
+  def this(labeledEdges: Seq[(V,A,V)]) = {
     this(labeledEdges.flatMap{ case (v1,_,v2) =>
       Analysis.checkInterrupted("construct labeled graph")
       Set(v1,v2)

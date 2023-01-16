@@ -5,12 +5,12 @@ import Console._
 object Debug {
   var debugModeGlobal = false
 
-  def debug(x: Any) {
+  def debug(x: Any): Unit = {
     val DEBUG = "\u001b[38;5;111m"
     if (debugModeGlobal) println(s"${DEBUG}${x}${RESET}")
   }
 
-  def info(name: String, debugModeLocal: Boolean = true)(props: (String, Any)*) {
+  def info(name: String, debugModeLocal: Boolean = true)(props: (String, Any)*): Unit = {
     if (debugModeLocal) {
       val lineLength = 50
       debug(s"--- ${name} ${"-"*((lineLength - (5 + name.length)).max(0))}")
